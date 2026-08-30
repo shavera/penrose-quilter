@@ -8,6 +8,8 @@ PX_TO_IN_SCALE = 64.0
 
 
 class Rhomb(QPolygonF):
+    """A Rhombus, specified by its narrowest angle, and a side length (in graphics space)"""
+
     def __init__(self, narrow_angle_deg: float, length_scale_px: float):
         narrow_angle_rad = narrow_angle_deg * math.pi / 180.0
         x_offset = length_scale_px * math.cos(narrow_angle_rad)
@@ -23,6 +25,8 @@ class Rhomb(QPolygonF):
 
 
 class ThinRhomb(Rhomb):
+    """The thinner rhombus of the P3 tiling, with a π/10 narrow angle"""
+
     def __init__(self, length_scale_in: float):
         super().__init__(
             narrow_angle_deg=36.0, length_scale_px=length_scale_in * PX_TO_IN_SCALE
@@ -30,6 +34,8 @@ class ThinRhomb(Rhomb):
 
 
 class WideRhomb(Rhomb):
+    """The thicker rhombus of the P3 tiling, with a π/5 narrow angle"""
+
     def __init__(self, length_scale_in: float):
         super().__init__(
             narrow_angle_deg=72.0, length_scale_px=length_scale_in * PX_TO_IN_SCALE
@@ -37,6 +43,8 @@ class WideRhomb(Rhomb):
 
 
 class QuiltCanvas(QGraphicsScene):
+    """The set of geometric objects, laid out in space appropriately, to be viewed below."""
+
     def __init__(
         self,
         tile_scale_in: float,
@@ -98,6 +106,8 @@ class QuiltCanvas(QGraphicsScene):
 
 
 class QuiltView(QGraphicsView):
+    """The view of the QuiltCanvas, with zooming and panning."""
+
     coordinates_changed = pyqtSignal(QPoint)
     ZOOM_SCALE_FACTOR = 1.1
 

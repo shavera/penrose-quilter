@@ -21,6 +21,12 @@ INITIAL_QUILT_HEIGHT = 11
 
 
 class TileSelector(QWidget):
+    """
+    Widget to select which tile shape will be added to the canvas.
+
+    Note, this is largely a placeholder for now.
+    """
+
     def __init__(self, parent: QWidget | None = None):
         super().__init__(parent)
         self.tile_btn: list[QPushButton] = []
@@ -33,6 +39,8 @@ class TileSelector(QWidget):
 
 
 class SizeWidget(QWidget):
+    """Widget to determine physical length scales"""
+
     tile_size_changed = pyqtSignal(float)
     quilt_height_changed = pyqtSignal(float)
     quilt_width_changed = pyqtSignal(float)
@@ -91,6 +99,18 @@ class SizeWidget(QWidget):
 
 
 class MainWindow(QMainWindow):
+    """
+    Main window of the application
+
+    Laid out in a 2x2 grid.
+    The upper left (main widget) view will be the quilt and pattern itself.
+    Upper right will have some size selection. In the future, color selection will also
+    likely go in this space.
+    Lower left will enable a user to select tiles they will place.
+    The lower right doesn't have an explicit purpose but is being used to track
+    debug statements we may want to make.
+    """
+
     def __init__(self):
         super().__init__()
         self.layout = QGridLayout()
