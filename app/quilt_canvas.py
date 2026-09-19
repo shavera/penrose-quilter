@@ -21,8 +21,8 @@ class Rhomb(QGraphicsPolygonItem):
             QPointF(x_offset, y_offset),
             QPointF(0, 0),
         ]
-        self.center = QPointF((length_scale_px + x_offset) / 2, y_offset / 2))
-        super().__init__(QPolygonF(self.points)
+        self.center = QPointF((length_scale_px + x_offset) / 2, y_offset / 2)
+        super().__init__(QPolygonF(self.points))
 
     def mousePressEvent(self, event):
         # if event.button() == Qt.MouseButton.LeftButton:
