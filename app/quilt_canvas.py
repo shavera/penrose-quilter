@@ -2,26 +2,32 @@ import math
 
 from PyQt6.QtCore import QObject, QPoint, QPointF, QRectF, QSizeF, Qt, pyqtSignal
 from PyQt6.QtGui import QCursor, QKeyEvent, QMouseEvent, QPolygonF
-from PyQt6.QtWidgets import QGraphicsScene, QGraphicsView, QWidget
+from PyQt6.QtWidgets import QGraphicsPolygonItem, QGraphicsScene, QGraphicsView, QWidget
 
 PX_TO_IN_SCALE = 64.0
 
 
-class Rhomb(QPolygonF):
+class Rhomb(QGraphicsPolygonItem):
     """A Rhombus, specified by its narrowest angle, and a side length (in graphics space)"""
 
     def __init__(self, narrow_angle_deg: float, length_scale_px: float):
         narrow_angle_rad = narrow_angle_deg * math.pi / 180.0
         x_offset = length_scale_px * math.cos(narrow_angle_rad)
         y_offset = length_scale_px * math.sin(narrow_angle_rad)
-        points = [
+        self.points = [
             QPointF(0, 0),
             QPointF(length_scale_px, 0),
             QPointF(length_scale_px + x_offset, y_offset),
             QPointF(x_offset, y_offset),
             QPointF(0, 0),
         ]
-        super().__init__(points)
+        self.center = QPointF((length_scale_px + x_offset) / 2, y_offset / 2))
+        super().__init__(QPolygonF(self.points)
+
+    def mousePressEvent(self, event):
+        # if event.button() == Qt.MouseButton.LeftButton:
+
+        super().mousePressEvent(event)
 
 
 class ThinRhomb(Rhomb):
