@@ -1,39 +1,41 @@
 FROM ubuntu:26.04
 
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN mv /etc/apt/apt.conf.d/docker-clean /etc/apt/apt.conf.d/docker-clean.disabled
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && apt-get install -y --no-install-recommends \
+      build-essential \
+      ca-certificates \
       curl \
       gpg \
       git \
-      build-essential \
       less \
       micro \
       ninja-build \
+      python3 \
+      python3-pip \
+      python3-venv \
       wget
 
 ARG CMAKE_VERSION="4.4.3"
-ARG CMAKE_ARCH="linux-86_64"
+ARG CMAKE_ARCH="linux-x86_64"
 
 RUN <<EOD
   mkdir -p /tmp/cmake-install
   cd /tmp/cmake-install
-  curl -L "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-${CMAKE_ARCH}.sh" -o cmakeinstall.sh
+  wget --no-verbose "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-${CMAKE_ARCH}.sh"
   curl -L "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-SHA-256.txt" -o sha256.txt
-  sha256sum --ignore-missing -c sha256.txt && \
-  sh cmakeinstall.sh --prefix=/usr/local --exclude-subdir && \
-  rm cmakeinstall.sh sha256.txt
+  ls
+  sha256sum --ignore-missing -c sha256.txt
+  sh cmake-${CMAKE_VERSION}-${CMAKE_ARCH}.sh --prefix=/usr/local --exclude-subdir
   cd /tmp
   rm -rf /tmp/cmake-install
 EOD
 
-RUN <<EOL
-  mkdir -p /tmp/qt-install
-  cd /tmp/qt-install
-  curl -OL https://download.qt.io/official_releases/online_installers/qt-online-installer-linux-x64-online.run
-  qt-online-linux-installer-x64-online.run install --root /opt/qt6 --accept-licenses --default-answer --confirm-command install qt6.11.2-full-dev
-  cd /tmp
-  rm -rf /tmp/qt-install
-EOL
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get install -y --no-install-recommends \
+      qt6-base-dev
