@@ -10,20 +10,15 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
       build-essential \
       ca-certificates \
       curl \
-      gpg \
       git \
-      less \
-      micro \
-      ninja-build \
       python3 \
-      python3-pip \
-      python3-venv \
       wget
 
 ARG CMAKE_VERSION="4.4.3"
 ARG CMAKE_ARCH="linux-x86_64"
 
 RUN <<EOD
+  set -e
   mkdir -p /tmp/cmake-install
   cd /tmp/cmake-install
   wget --no-verbose "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-${CMAKE_ARCH}.sh"
@@ -39,3 +34,16 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get install -y --no-install-recommends \
       qt6-base-dev
+
+# Add Developer QoL features
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    apt-get install -y --no-install-recommends \
+      gammaray \
+      gdb \
+      gpg \
+      less \
+      micro \
+      ninja-build
+
+RUN mv /etc/apt/apt.conf.d/docker-clean.disabled /etc/apt/apt.conf.d/docker-clean
