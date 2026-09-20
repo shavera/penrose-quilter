@@ -1,0 +1,29 @@
+{
+  "name": "Qt 6 Development Environment",
+  //  "image": "stateoftheartio/qt6:6.10-gcc-aqt",
+  "dockerFile": "Dockerfile",
+  // Options passed to the container run command
+  "runArgs": [
+    "--cap-add=SYS_PTRACE",
+    "--security-opt",
+    "seccomp=unconfined"
+  ],
+  // Configure toolchain and VS Code settings inside the container
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "cmake.cmakePath": "cmake",
+        "cmake.generator": "Ninja",
+        "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools"
+      },
+      "extensions": [
+        "ms-vscode.cpptools",
+        "ms-vscode.cmake-tools",
+        "twxs.cmake",
+        "outfitter.qt-for-python-and-cpp"
+      ]
+    }
+  },
+  //  // Ensure necessary GUI/system dependencies are available for building/testing
+  //  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y libgl-dev libvulkan-dev build-essential",
+}
