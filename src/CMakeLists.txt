@@ -2,13 +2,10 @@ cmake_minimum_required(VERSION 3.28)
 
 project(penrose_quilter)
 
-add_library(penquil)
-target_sources(penquil 
-  PRIVATE
-    main_window.cpp
-    quilt_canvas.cpp
-)
-set_target_properties(penquil PROPERTIES CXX_STANDARD 23)
+add_subdirectory(app)
+
+
+find_package(Qt6 REQUIRED COMPONENTS Widgets)
 
 add_executable(penrose_quilter main.cpp)
-target_link_libraries(penrose_quilter penquil)
+target_link_libraries(penrose_quilter penquil_app Qt6::Widgets)

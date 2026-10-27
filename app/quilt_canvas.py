@@ -156,6 +156,8 @@ class QuiltView(QGraphicsView):
         if zoom != self._zoom:
             self._zoom = zoom
             if self._zoom > 0:
+                # This is dumb: factor^step if step positive, or factor^(-abs(step)) if step negative
+                # -abs(step) when step is negative = step; so it's just factor^step
                 if step > 0:
                     factor = self.ZOOM_SCALE_FACTOR**step
                 else:
