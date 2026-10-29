@@ -5,11 +5,16 @@
 #include <QGraphicsView>
 #include <QPointer>
 
+class ViewStateMachine;
+
+
 class QuiltView : public QGraphicsView
 {
     Q_OBJECT
 public:
     explicit QuiltView(QWidget* parent = nullptr);
+
+    ~QuiltView();
 
     void setCanvas(QPointer<QuiltCanvas> canvas);
 
@@ -27,17 +32,13 @@ private:
 
     void resizeEvent(QResizeEvent* event) override;
 
-    void toggleDragMode();
-
     void mouseMoveEvent(QMouseEvent* event) override;
 
     void leaveEvent(QEvent* event) override;
 
-    void keyPressEvent(QKeyEvent* event) override;
-
-    void keyReleaseEvent(QKeyEvent* event) override;
-
     QPointer<QuiltCanvas> canvas_{nullptr};
+
+    std::unique_ptr<ViewStateMachine> stateMachine_;
 
     static constexpr double kZoomScaleFactor{1.1};
 

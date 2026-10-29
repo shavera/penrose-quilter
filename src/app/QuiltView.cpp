@@ -1,4 +1,5 @@
 #include "QuiltView.h"
+#include "ViewStateMachine.h"
 
 #include <QEvent>
 #include <QKeyEvent>
@@ -9,12 +10,15 @@
 
 QuiltView::QuiltView(QWidget* parent)
     : QGraphicsView{parent}
+    , stateMachine_{new ViewStateMachine(this)}
 {
     setTransformationAnchor(AnchorUnderMouse);
     setResizeAnchor(AnchorUnderMouse);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 }
+
+QuiltView::~QuiltView() = default;
 
 void QuiltView::setCanvas(QPointer<QuiltCanvas> canvas)
 {
@@ -89,15 +93,6 @@ void QuiltView::resizeEvent(QResizeEvent* event)
     resetView();
 }
 
-void QuiltView::toggleDragMode()
-{
-    if(dragMode() == ScrollHandDrag){
-        setDragMode(NoDrag);
-    } else {
-        setDragMode(ScrollHandDrag);
-    }
-}
-
 void QuiltView::mouseMoveEvent(QMouseEvent *event)
 {
     updateCoordinates(event->position().toPoint());
@@ -108,26 +103,4 @@ void QuiltView::leaveEvent(QEvent *event)
 {
     emit coordinatesChanged(QPoint{});
     QGraphicsView::leaveEvent(event);
-}
-
-void QuiltView::keyPressEvent(QKeyEvent* event)
-{
-    if(event->key() == Qt::Key_Alt){
-        setDragMode(ScrollHandDrag);
-    } else if (event->key() == Qt::Key_Shift){
-        setDragMode(RubberBandDrag);
-    }
-    QGraphicsView::keyPressEvent(event);
-}
-
-void QuiltView::keyReleaseEvent(QKeyEvent *event)
-{
-    // TODO - probably want to have a bit more of a state machine here and
-    // some explicit transitions between states to track this properly.
-    if(event->key() == Qt::Key_Alt){
-        setDragMode(NoDrag);
-    } else if (event->key() == Qt::Key_Shift){
-        setDragMode(RubberBandDrag);
-    }
-    QGraphicsView::keyReleaseEvent(event);
 }
