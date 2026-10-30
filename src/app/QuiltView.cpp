@@ -1,5 +1,4 @@
 #include "QuiltView.h"
-#include "ViewStateMachine.h"
 
 #include <QEvent>
 #include <QKeyEvent>
@@ -7,10 +6,9 @@
 #include <QResizeEvent>
 #include <QWheelEvent>
 
-
 QuiltView::QuiltView(QWidget* parent)
     : QGraphicsView{parent}
-    , stateMachine_{new ViewStateMachine(this)}
+    , stateMachine_{QuiltView::configureStateMachine(this)}
 {
     setTransformationAnchor(AnchorUnderMouse);
     setResizeAnchor(AnchorUnderMouse);
@@ -57,22 +55,17 @@ void QuiltView::updateCoordinates(std::optional<QPoint> pos)
 
 void QuiltView::zoom(int step)
 {
-    // TODO: Come back to this section and see if it makes any sense.
-    // Just copied from python script
-    // Wheel event reports integer steps in 1/8 degree increments;
-    // 120 steps to a 15 degree 'click'
-    // why can't zoom be negative, maybe it's okay if it is?
-    const int zoom = std::max(0, zoomLevel_ + step);
-    if(zoom == zoomLevel_){
-        return;
-    }
-    zoomLevel_ = zoom;
-    if (zoomLevel_ <= 0){
-        resetView();
-        return;
-    }
-    const double factor = std::pow(kZoomScaleFactor, step);
-    scale(factor, factor);
+  const int zoom = std::max(0, zoomLevel_ + step);
+  if (zoom == zoomLevel_) {
+    return;
+  }
+  zoomLevel_ = zoom;
+  if (zoomLevel_ <= 0) {
+    resetView();
+    return;
+  }
+  const double factor = std::pow(kZoomScaleFactor, step);
+  scale(factor, factor);
 }
 
 void QuiltView::wheelEvent(QWheelEvent* event)
@@ -81,6 +74,7 @@ void QuiltView::wheelEvent(QWheelEvent* event)
     if(delta == 0){
         return;
     }
+    // TODO: Refine the wheel delta step stuff
     static constexpr int kWheelDeltaToStep{120};
     const int step = delta / kWheelDeltaToStep;
     zoom(step);

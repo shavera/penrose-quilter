@@ -5,10 +5,11 @@
 ```mermaid
 
 stateDiagram-v2
-  [*] --> DragPan : AltKey_Pressed
-  [*] --> Select : ShiftKey_Pressed
+  [*] --> ready 
 
-  DragPan --> [*] : AltKey_Released
-  Select --> [*] : ShiftKey_Released
+  ready --> dragPan : AltKey_Pressed
+  dragPan --> ready : AltKey_Released
 
+  ready --> bandSelect : ShiftKey_Pressed
+  bandSelect --> ready : ShiftKey_Released
 ```

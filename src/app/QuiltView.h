@@ -5,13 +5,16 @@
 #include <QGraphicsView>
 #include <QPointer>
 
-class ViewStateMachine;
-
+class QStateMachine;
 
 class QuiltView : public QGraphicsView
 {
     Q_OBJECT
 public:
+    using ConfigureStateMachineFn = std::function<QPointer<QStateMachine>(QuiltView*)>;
+    // Note: Implemented in `QuiltViewConfigureStateMachine.cpp`
+    static QPointer<QStateMachine> configureStateMachine(QuiltView* quiltView);
+
     explicit QuiltView(QWidget* parent = nullptr);
 
     ~QuiltView();
@@ -38,7 +41,7 @@ private:
 
     QPointer<QuiltCanvas> canvas_{nullptr};
 
-    std::unique_ptr<ViewStateMachine> stateMachine_;
+    QPointer<QStateMachine> stateMachine_{nullptr};
 
     static constexpr double kZoomScaleFactor{1.1};
 

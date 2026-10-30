@@ -10,10 +10,10 @@ target_sources(penquil_app
         MainWindow.cpp
         QuiltCanvas.cpp
         QuiltView.cpp
+        QuiltViewConfigureStateMachine.cpp
         SizeWidget.cpp
         Tiles.cpp
         TileSelector.cpp
-        ViewStateMachine.cpp
 
         include/app/MainWindow.h
         QuiltCanvas.h
@@ -21,7 +21,6 @@ target_sources(penquil_app
         SizeWidget.h
         Tiles.h
         TileSelector.h
-        ViewStateMachine.h
 
         MainWindow.ui
         TileSelector.ui
